@@ -3,6 +3,9 @@
 Visual simulation of an intelligent slime-mold named Physarum Polycephalum, a biological form of intelligence without a nervous system.<br>
 Has implications for intrinsic motivation of intelligent systems and path traversal.
 
+## See
+See the simulation [here](https://artainmo.github.io/Physarum_Polycephalum-simulation/).
+
 ## Workings
 Here are the main characteristics of the Physarum polycephalum who are important for programming its simulation:
 * It starts of at one point, branches like a coral until it senses from a distance food and starts to develop one branch towards that food. In the meanwhile the branches that went on wrong path retract and leave translucent slime, which signals the blob to not expand in that 'wrong' path again. When finding path to food, it finds the shortest path. Longer paths retract while the shortest one gains volume.
