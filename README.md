@@ -1,6 +1,6 @@
 # Physarum Polycephalum simulation
 
-Visual simulation of an intelligent slime-mold, a biological form of intelligence without a nervous system.<br>
+Visual simulation of an intelligent slime-mold named Physarum Polycephalum, a biological form of intelligence without a nervous system.<br>
 Has implications for intrinsic motivation of intelligent systems and path traversal.
 
 ## Workings
