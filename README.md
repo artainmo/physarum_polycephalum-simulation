@@ -4,7 +4,7 @@ Visual simulation of an intelligent slime-mold named Physarum Polycephalum, a bi
 Has implications for intrinsic motivation of intelligent systems and path traversal.
 
 ## See
-See the simulation [here](https://artainmo.github.io/Physarum_Polycephalum-simulation/).
+<a href="https://artainmo.github.io/Physarum_Polycephalum-simulation/" target="_blank">Use the simulation.</a>
 
 ## Workings
 Here are the main characteristics of the Physarum polycephalum who are important for programming its simulation:
