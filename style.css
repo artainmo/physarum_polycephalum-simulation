@@ -1,0 +1,27 @@
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.canvas-container {
+    display: flex;
+    flex-direction: column; /* Arrange canvas and buttons vertically */
+    align-items: center;
+}
+
+canvas {
+    border: 2px solid #000;
+    max-width: 100%; /* Adjust canvas size as needed */
+}
+
+.button-container {
+    margin-top: 10px; /* Adjust the spacing between canvas and buttons */
+}
+
+button {
+    padding: 10px 20px;
+    margin-right: 10px; /* Adjust the spacing between buttons */
+}
