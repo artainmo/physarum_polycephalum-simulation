@@ -198,7 +198,7 @@ class Physarum {
 		}
 	}
 
-	//Find food with most value relative to its quantity and quality
+	//Find food with most value relative to its quantity, quality and distance
 	//Adapt cAMP in open_ended branches accordingly
 	//No branches sense a food source => 50cAMP
 	//Branches that sense the best food source => 75cAMP
@@ -220,14 +220,15 @@ class Physarum {
 			}
 			if (this.branches[i].inFood) { inFood = true; }
 		}
+		console.log(highestSensedFood);
+		console.log(inFood);
+		console.log(Foods[0]);
 		//Give cAMP accordingly
 		for (let i in this.branches) {
 			if (highestSensedFood === 0) {
 				this.branches[i].changeCAMP(50);
 			} else if (this.branches[i].sensedFood === highestSensedFood) {
-				if (this.branches[i].inFood) {
-					this.branches[i].changeCAMP(25);
-				} else { this.branches[i].changeCAMP(75); }
+				this.branches[i].changeCAMP(75);
 			} else if (this.branches[i].sensedFood > 0) {
 				this.branches[i].changeCAMP(25);
 			} else if (!inFood) {
@@ -248,27 +249,28 @@ class Food {
 	constructor(x, y, r, protein, carbohydrates) {
 		this.position = new Position(x,y);
 		this.radius = r;
-		this._get_volume_and_sensingRange_and_foodValue();
 		let proteinPercentage = 100 / (protein + carbohydrates) * protein;
 		this.foodRating = 100 - Math.sqrt(Math.pow(proteinPercentage - 66.66, 2));
+		this._get_sensingRange_and_foodValue();
 	}
 
-	_get_volume_and_sensingRange_and_foodValue() {
-		this.volume = Math.PI * Math.pow(this.radius, 2);
+	_get_sensingRange_and_foodValue() {
+		// this.volume = Math.PI * Math.pow(this.radius, 2);
 		this.sensingRange = (this.radius * 2) * 4.5;
 		this.foodValue = this.foodRating * this.radius;
 	}
 
-	_eat() {
+	_eat(branch) {
 		this.radius -= (this.radius / 100 * 5);
-		if (this.radius < 0) { this.radius = 0; }
-		this._get_volume_and_sensingRange();
+		if (this.radius <= (branch.length*2)) { this.radius = 0; }
+		this._get_sensingRange_and_foodValue();
 	}
 
 	sense(branch) {
 		if (this.radius <= 0) { return 0; }
-		if (branch.position2.distance(this.position) <= this.sensingRange) {
-			return this.foodValue;
+		const distance = branch.position2.distance(this.position);
+		if (distance <= this.sensingRange) {
+			return (this.foodValue / (distance/10));
 		}
 		return 0;
 	}
@@ -276,7 +278,7 @@ class Food {
 	arrived(branch) {
 		if (this.radius <= 0) { return false; }
 		if (branch.position2.distance(this.position) <= this.radius) {
-			this._eat();
+			this._eat(branch);
 			return true;
 		}
 		return false;
@@ -342,14 +344,14 @@ document.getElementById('startButton').addEventListener('click', () => {
 	let food = new Food(canvas.width - (canvas.width/15),
 							canvas.height - (canvas.height/6),
 							Math.min(canvas.width, canvas.height)/15,
-							2, 1);
+							34, 25);
 
 	clearInterval(interval);
 	interval = setInterval(() => {
 		drawMap(ctx, [slime_mold], [food]);
-		slime_mold.advance([]);
+		slime_mold.advance([food]);
 		console.log(slime_mold.branches);
-	}, 1000);
+	}, 300);
 });
 
 //Pause the simulation
