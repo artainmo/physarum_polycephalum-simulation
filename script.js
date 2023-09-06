@@ -304,12 +304,15 @@ function drawMap(ctx, Physarums, Foods) {
 		drawCircle(ctx, physarum.startPos.x, physarum.startPos.y,
 					physarum.branchLength, '#F9DC5C');
 		for (branch of physarum.branches) {
-			if (branch.type === "vein") {
+			if (branch.type === "translucent slime") {
+				drawLine(ctx, branch.position1.x, branch.position1.y,
+					branch.position2.x, branch.position2.y, '#F3FFBD');
+			} else if (branch.open_ended === false) {
 				drawLine(ctx, branch.position1.x, branch.position1.y,
 					branch.position2.x, branch.position2.y, '#F9DC5C');
 			} else {
 				drawLine(ctx, branch.position1.x, branch.position1.y,
-					branch.position2.x, branch.position2.y, '#F3FFBD');
+					branch.position2.x, branch.position2.y, '#DF928E');
 			}
 		}
 	}
@@ -328,18 +331,19 @@ canvas.height = window.innerHeight * 0.8;
 const ctx = canvas.getContext('2d');
 var interval;
 
+//Simulation objects
+let slime_mold = new Physarum(canvas.width/2, canvas.height/2,
+			Math.min(canvas.width, canvas.height)/100);
+let slime_molds = [slime_mold];
+let food = new Food(canvas.width - (canvas.width/15),
+						canvas.height - (canvas.height/6),
+						Math.min(canvas.width, canvas.height)/15,
+						34, 25);
+let foods = [food];
+
 //Start the simulation
 document.getElementById('startButton').addEventListener('click', () => {
-	let slime_mold = new Physarum(canvas.width/2, canvas.height/2,
-				Math.min(canvas.width, canvas.height)/100);
-	let slime_molds = [slime_mold];
-	let food = new Food(canvas.width - (canvas.width/15),
-							canvas.height - (canvas.height/6),
-							Math.min(canvas.width, canvas.height)/15,
-							34, 25);
-	let foods = [food];
-
-	document.getElementById('startButton').childNodes[0].nodeValue = "Restart";
+	document.getElementById('startButton').childNodes[0].nodeValue = "Continue";
 	clearInterval(interval);
 	interval = setInterval(() => {
 		if (!foods.some((fo) => { return fo.radius !== 0 })) {
@@ -347,8 +351,7 @@ document.getElementById('startButton').addEventListener('click', () => {
 		}
 		drawMap(ctx, slime_molds, foods);
 		slime_mold.advance(foods);
-		console.log(slime_mold.branches);
-	}, 300);
+	}, 1000);
 });
 
 //Pause the simulation
