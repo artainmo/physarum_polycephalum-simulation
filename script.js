@@ -332,40 +332,92 @@ const canvas = document.getElementById('Canvas');
 canvas.width = window.innerWidth * 0.97;
 canvas.height = window.innerHeight * 0.8;
 const ctx = canvas.getContext('2d');
-var interval;
+var g_interval;
 
-//Simulation objects
-let slime_mold = new Physarum(canvas.width/2, canvas.height/2,
-			Math.min(canvas.width, canvas.height)/100);
-let slime_molds = [slime_mold];
-let food = new Food(canvas.width - (canvas.width/15),
-						canvas.height - (canvas.height/6),
-						Math.min(canvas.width, canvas.height)/15,
-						34, 25);
-let foods = [food];
+//Start simulation
+var g_slime_molds;
+var g_foods;
 
-//Start the simulation
-document.getElementById('startButton').addEventListener('click', () => {
-	document.getElementById('startButton').childNodes[0].nodeValue = "Continue";
-	clearInterval(interval);
-	interval = setInterval(() => {
-		if (!foods.some((fo) => { return fo.radius !== 0 })) {
-			clearInterval(interval);
-		}
-		drawMap(ctx, slime_molds, foods);
-		slime_mold.advance(foods);
-		console.log(foods[0]);
+function define_obj1() {
+	slime_mold = new Physarum(canvas.width/2, canvas.height/2,
+				Math.min(canvas.width, canvas.height)/100);
+	g_slime_molds = [slime_mold];
+	food = new Food(canvas.width - (canvas.width/15),
+							canvas.height - (canvas.height/6),
+							Math.min(canvas.width, canvas.height)/15,
+							34, 25);
+	g_foods = [food];
+}
+
+function define_obj2() {
+	slime_mold = new Physarum(canvas.width/2, canvas.height/2,
+				Math.min(canvas.width, canvas.height)/100);
+	g_slime_molds = [slime_mold];
+	food = new Food(canvas.width - (canvas.width/15),
+							canvas.height - (canvas.height/6),
+							Math.min(canvas.width, canvas.height)/15,
+							34, 25);
+	food2 = new Food(canvas.width - (canvas.width/15),
+							canvas.height/6,
+							Math.min(canvas.width, canvas.height)/15,
+							34, 25);
+	g_foods = [food, food2];
+}
+
+var g_maps = [define_obj1, define_obj2];
+var g_map_index = 0;
+
+function run() {
+	if (!g_foods.some((fo) => { return fo.radius !== 0 })) {
+		clearInterval(g_interval);
+		startButton.childNodes[0].nodeValue = "Start";
+	}
+	drawMap(ctx, g_slime_molds, g_foods);
+	for (let i in g_slime_molds) {
+		g_slime_molds[i].advance(g_foods);
+	}
+}
+
+//Handle HTML buttons
+var startButton = document.getElementById('startButton');
+var nextButton = document.getElementById('nextButton');
+
+function continues() {
+	startButton.childNodes[0].nodeValue = "Pause";
+	g_interval = setInterval(() => {
+		run()
 	}, 300);
+}
+function start() { //Draw static map to show
+	g_maps[g_map_index]();
+	drawMap(ctx, g_slime_molds, g_foods);
+}
+
+function pause() {
+	startButton.childNodes[0].nodeValue = "Continue";
+	clearInterval(g_interval);
+}
+
+startButton.addEventListener('click', () => {
+	if (startButton.childNodes[0].nodeValue === "Start") {
+		start();
+		continues();
+	} else if (startButton.childNodes[0].nodeValue === "Pause") {
+		pause();
+	} else if (startButton.childNodes[0].nodeValue === "Continue") {
+		continues();
+	}
 });
 
-//Pause the simulation
-document.getElementById('pauseButton').addEventListener('click', () => {
-    // ctx.clearRect(0, 0, canvas.width, canvas.height);
-	clearInterval(interval);
-});
+start(); //Draw inital static map to show
 
-   //Stop the simulation
-// document.getElementById('stopButton').addEventListener('click', () => {
-//     ctx.clearRect(0, 0, canvas.width, canvas.height);
-// 	clearInterval(interval);
-// });
+nextButton.addEventListener('click', () => {
+	startButton.childNodes[0].nodeValue = "Start";
+	clearInterval(g_interval);
+	if (g_map_index >= g_maps.length-1) {
+		g_map_index = 0;
+	} else {
+		g_map_index++;
+	}
+	start();
+});
