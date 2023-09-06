@@ -83,47 +83,60 @@ class Branch {
 	}
 
 	intersect(branch2) {
-		console.log(this.show());
-		console.log(branch2.show());
-		let determinant = this.directionVector.x * branch2.directionVector.y
-					- branch2.directionVector.x * this.directionVector.y;
-		console.log("1")
-		if (determinant === 0) {
-			console.log("2")
-			if (this.position1.x === branch2.position1.x &&
-					this.position1.y === branch2.position1.y
-					|| this.position1.x === branch2.position2.x &&
-					this.position1.y === branch2.position2.y
-					|| this.position2.x === branch2.position1.x &&
-					this.position2.y === branch2.position1.y
-					|| this.position2.x === branch2.position2.x &&
-					this.position2.y === branch2.position2.y) {
-				console.log("3")
-				if (this.position2.isEqual(branch2.position1)
-							&& !this.position1.isEqual(branch2.position2)) {
-					return false;
-				} else { return true; }
-			}
-			console.log("4")
+		if (branch2.position1.isEqual(this.position1) &&
+				branch2.position2.isEqual(this.position2)) {
+			return true;
+		} else if (branch2.position1.isEqual(this.position1)) {
+			return false;
+		} else if (branch2.position2.isEqual(this.position1)) {
+			return false;
+		} else if (this.position2.distance(branch2.position1) < this.length
+				|| this.position2.distance(branch2.position2) < this.length) {
+			return true;
+		} else {
 			return false;
 		}
-		const t1 = ((branch2.position1.x - this.position1.x) *
-			branch2.directionVector.y -
-			(branch2.position1.y - this.position1.y) *
-			branch2.directionVector.x) / determinant;
-		const t2 = ((branch2.position1.x - this.position1.x) *
-			this.directionVector.y -
-			(branch2.position1.y - this.position1.y) *
-			this.directionVector.x) / determinant;
-		if (t1 >= 0 && t1 <= 1 && t2 >= 0 && t2 <= 1) {
-			console.log("5")
-			if (this.position2.isEqual(branch2.position1)
-						&& !this.position1.isEqual(branch2.position2)) {
-				return false;
-			} else { return true; }
-		}
-		console.log("6")
-		return false;
+		// console.log(this.show());
+		// console.log(branch2.show());
+		// let determinant = this.directionVector.x * branch2.directionVector.y
+		// 			- branch2.directionVector.x * this.directionVector.y;
+		// console.log("1")
+		// if (determinant === 0) {
+		// 	console.log("2")
+		// 	if (this.position1.x === branch2.position1.x &&
+		// 			this.position1.y === branch2.position1.y
+		// 			|| this.position1.x === branch2.position2.x &&
+		// 			this.position1.y === branch2.position2.y
+		// 			|| this.position2.x === branch2.position1.x &&
+		// 			this.position2.y === branch2.position1.y
+		// 			|| this.position2.x === branch2.position2.x &&
+		// 			this.position2.y === branch2.position2.y) {
+		// 		console.log("3")
+		// 		if (this.position2.isEqual(branch2.position1)
+		// 					&& !this.position1.isEqual(branch2.position2)) {
+		// 			return false;
+		// 		} else { return true; }
+		// 	}
+		// 	console.log("4")
+		// 	return false;
+		// }
+		// const t1 = ((branch2.position1.x - this.position1.x) *
+		// 	branch2.directionVector.y -
+		// 	(branch2.position1.y - this.position1.y) *
+		// 	branch2.directionVector.x) / determinant;
+		// const t2 = ((branch2.position1.x - this.position1.x) *
+		// 	this.directionVector.y -
+		// 	(branch2.position1.y - this.position1.y) *
+		// 	this.directionVector.x) / determinant;
+		// if (t1 >= 0 && t1 <= 1 && t2 >= 0 && t2 <= 1) {
+		// 	console.log("5")
+		// 	if (this.position2.isEqual(branch2.position1)
+		// 				&& !this.position1.isEqual(branch2.position2)) {
+		// 		return false;
+		// 	} else { return true; }
+		// }
+		// console.log("6")
+		// return false;
 	}
 }
 
@@ -141,7 +154,7 @@ class Physarum {
 
 	_branch_intersect(newBranch) {
 		for (branch of this.branches) {
-			if (branch.intersect(newBranch)) {
+			if (newBranch.intersect(branch)) {
 				return true;
 			}
 		}
@@ -194,29 +207,9 @@ class Physarum {
 			from.length * Math.cos(newAngle)));
 		let newBranch = new Branch(from.position2.x, from.position2.y,
 									endPoint.x, endPoint.y);
-		// if (!this._branch_intersect(newBranch2)) {
+		if (!this._branch_intersect(newBranch)) {
 			this.branches.push(newBranch);
-		// }
-	}
-
-	_225degrees_branch(from) {
-		let vector225degrees = new Position(0.7071, -0.7071);
-		let endPoint3 = from.position2.addition(
-			from.directionVector.multiplication(vector225degrees));
-		let newBranch3 = new Branch(from.position2.x, from.position2.y,
-									endPoint3.x, endPoint3.y);
-		// if (!this._branch_intersect(newBranch3)) {
-			this.branches.push(newBranch3);
-		// }
-	}
-
-	_straight_branch(from) {
-		let endPoint1 = from.position2.addition(from.directionVector);
-		let newBranch1 = new Branch(from.position2.x, from.position2.y,
-									endPoint1.x, endPoint1.y);
-		// if (!this._branch_intersect(newBranch1)) {
-			this.branches.push(newBranch1);
-		// }
+		}
 	}
 
 	_branch(from) {
@@ -226,7 +219,6 @@ class Physarum {
 		else if (from.cAMP >= 50) { iterations = 1; }
 		for (let i=0; i < iterations; i++) {
 			if (from.open_ended === true) { from.changeOpenEnded(); }
-			// this._straight_branch(from);
 			this._degrees_branch(from, 180);
 			this._degrees_branch(from, 135);
 			this._degrees_branch(from, 225);
@@ -284,7 +276,7 @@ class Physarum {
 
 	advance(Foods) {
 		//First adapt all open_ended branches cAMP levels in relation to food
-		this._adapt_branch_cAMP_to_foods(Foods);
+		// this._adapt_branch_cAMP_to_foods(Foods);
 		//Second branch out the open_ended branches in relation to own cAMP levels
 		this._branchingAndRetracting();
 	}
@@ -353,8 +345,8 @@ function drawCircle(context, x, y, radius, color='#000000')
 function drawMap(ctx, Physarums, Foods) {
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 	for (physarum of Physarums) {
-		// drawCircle(ctx, physarum.startPos.x, physarum.startPos.y,
-		// 			physarum.branchLength, '#F9DC5C');
+		drawCircle(ctx, physarum.startPos.x, physarum.startPos.y,
+					physarum.branchLength, '#F9DC5C');
 		for (branch of physarum.branches) {
 			if (branch.type === "vein") {
 				drawLine(ctx, branch.position1.x, branch.position1.y,
