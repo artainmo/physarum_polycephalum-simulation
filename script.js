@@ -96,47 +96,6 @@ class Branch {
 		} else {
 			return false;
 		}
-		// console.log(this.show());
-		// console.log(branch2.show());
-		// let determinant = this.directionVector.x * branch2.directionVector.y
-		// 			- branch2.directionVector.x * this.directionVector.y;
-		// console.log("1")
-		// if (determinant === 0) {
-		// 	console.log("2")
-		// 	if (this.position1.x === branch2.position1.x &&
-		// 			this.position1.y === branch2.position1.y
-		// 			|| this.position1.x === branch2.position2.x &&
-		// 			this.position1.y === branch2.position2.y
-		// 			|| this.position2.x === branch2.position1.x &&
-		// 			this.position2.y === branch2.position1.y
-		// 			|| this.position2.x === branch2.position2.x &&
-		// 			this.position2.y === branch2.position2.y) {
-		// 		console.log("3")
-		// 		if (this.position2.isEqual(branch2.position1)
-		// 					&& !this.position1.isEqual(branch2.position2)) {
-		// 			return false;
-		// 		} else { return true; }
-		// 	}
-		// 	console.log("4")
-		// 	return false;
-		// }
-		// const t1 = ((branch2.position1.x - this.position1.x) *
-		// 	branch2.directionVector.y -
-		// 	(branch2.position1.y - this.position1.y) *
-		// 	branch2.directionVector.x) / determinant;
-		// const t2 = ((branch2.position1.x - this.position1.x) *
-		// 	this.directionVector.y -
-		// 	(branch2.position1.y - this.position1.y) *
-		// 	this.directionVector.x) / determinant;
-		// if (t1 >= 0 && t1 <= 1 && t2 >= 0 && t2 <= 1) {
-		// 	console.log("5")
-		// 	if (this.position2.isEqual(branch2.position1)
-		// 				&& !this.position1.isEqual(branch2.position2)) {
-		// 		return false;
-		// 	} else { return true; }
-		// }
-		// console.log("6")
-		// return false;
 	}
 }
 
@@ -209,7 +168,9 @@ class Physarum {
 									endPoint.x, endPoint.y);
 		if (!this._branch_intersect(newBranch)) {
 			this.branches.push(newBranch);
+			return newBranch;
 		}
+		return undefined;
 	}
 
 	_branch(from) {
@@ -219,10 +180,11 @@ class Physarum {
 		else if (from.cAMP >= 50) { iterations = 1; }
 		for (let i=0; i < iterations; i++) {
 			if (from.open_ended === true) { from.changeOpenEnded(); }
-			this._degrees_branch(from, 180);
-			this._degrees_branch(from, 135);
-			this._degrees_branch(from, 225);
-			// from = newBranch1;
+			let newBranch = this._degrees_branch(from, 180);
+			newBranch = newBranch | this._degrees_branch(from, 135);
+			newBranch = newBranch | this._degrees_branch(from, 225);
+			if (!newBranch) { break; }
+			from = newBranch;
 		}
 	}
 
@@ -230,7 +192,7 @@ class Physarum {
 		for (let i in this.branches) {
 			if (this.branches[i].open_ended === true
 						&& this.branches[i].type === "vein") {
-				this._retract(this.branches[i]);
+				this._retract(this.branches[i], i);
 				this._branch(this.branches[i]);
 			}
 		}
@@ -276,7 +238,7 @@ class Physarum {
 
 	advance(Foods) {
 		//First adapt all open_ended branches cAMP levels in relation to food
-		// this._adapt_branch_cAMP_to_foods(Foods);
+		this._adapt_branch_cAMP_to_foods(Foods);
 		//Second branch out the open_ended branches in relation to own cAMP levels
 		this._branchingAndRetracting();
 	}
