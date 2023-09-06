@@ -175,12 +175,12 @@ class Physarum {
 		else if (from.cAMP >= 75) { iterations = 2; }
 		else if (from.cAMP >= 50) { iterations = 1; }
 		for (let i=0; i < iterations; i++) {
-			let newBranch = this._degrees_branch(from, 180);
-			this._degrees_branch(from, 135);
-			this._degrees_branch(from, 225);
-			if (!newBranch) { break; }
+			let newBranch1 = this._degrees_branch(from, 180);
+			let newBranch2 = this._degrees_branch(from, 135);
+			let newBranch3 = this._degrees_branch(from, 225);
+			if (!newBranch1 && !newBranch2 && !newBranch3) { break; }
 			if (from.open_ended === true) { from.changeOpenEnded(); }
-			from = newBranch;
+			from = newBranch1 || newBranch2 || newBranch3;
 		}
 	}
 
@@ -364,7 +364,30 @@ function define_obj2() {
 	g_foods = [food, food2];
 }
 
-var g_maps = [define_obj1, define_obj2];
+function define_obj3() {
+	slime_mold = new Physarum(canvas.width/2, canvas.height/2,
+				Math.min(canvas.width, canvas.height)/100);
+	g_slime_molds = [slime_mold];
+	food = new Food(canvas.width - (canvas.width/15),
+							canvas.height - (canvas.height/6),
+							Math.min(canvas.width, canvas.height)/15,
+							34, 25);
+	food2 = new Food(canvas.width - (canvas.width/15),
+							canvas.height/6,
+							Math.min(canvas.width, canvas.height)/15,
+							34, 25);
+	food3 = new Food(canvas.width/15,
+							canvas.height - (canvas.height/6),
+							Math.min(canvas.width, canvas.height)/20,
+							34, 25);
+	food4 = new Food(canvas.width/4,
+							canvas.height/5,
+							Math.min(canvas.width, canvas.height)/35,
+							34, 25);
+	g_foods = [food, food2, food3, food4];
+}
+
+var g_maps = [define_obj1, define_obj2, define_obj3];
 var g_map_index = 0;
 
 function run() {
@@ -376,8 +399,6 @@ function run() {
 	for (let i in g_slime_molds) {
 		g_slime_molds[i].advance(g_foods);
 	}
-	console.log(g_foods[1]);
-	console.log(Math.min(canvas.width, canvas.height)/100);
 }
 
 //Handle HTML buttons
