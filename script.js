@@ -122,7 +122,8 @@ class Physarum {
 
 	_open_ended(branch) {
 		for (let i in this.branches) {
-			if (branch.position2.isEqual(this.branches[i].position1)) {
+			if (this.branches[i].type === "vein" &&
+						branch.position2.isEqual(this.branches[i].position1)) {
 				if (branch.open_ended === true) { branch.changeOpenEnded(); }
 				return false;
 			}
@@ -136,17 +137,11 @@ class Physarum {
 		if (branch.cAMP < 0) { iterations = 2; }
 		else if (branch.cAMP < 25) { iterations = 1; }
 		for (let l=0; l < iterations; l++) {
-			if (branch.type === "translucent slime") { break; }
+			if (branch.type === "translucent slime"
+						|| branch.open_ended === false) { break; }
 			if (index < 4) { break; }
 			branch.changeType();
-			if (branch.open_ended === false) {
-				for (let i in this.branches) {
-					if (branch.position2.isEqual(this.branches[i].position1)
-							&& this.branches[i].type === "vein") {
-						this.branches[i].changeType();
-					}
-				}
-			}
+			//Find prior branch for next round and to potentially set as open-ended
 			for (let i in this.branches) {
 				if (branch.position1.isEqual(this.branches[i].position2)) {
 					branch = this.branches[i];
