@@ -6,7 +6,7 @@ Has implications for intrinsic motivation of intelligent systems and path traver
 The intrinsic motivation of this intelligent system can be summarized as consisting of two phases, namely exploration and exploitation. First it will explore by advancing in a generalized manner until it senses an attractant which leads to the exploitation phase where it advances in a selective manner towards the attractant until consumed. We could also talk about a third phase, the avoidant phase, where a repellant modulates the blob's behavior so that the blob avoids it.
 
 ## See
-<a href="https://artainmo.github.io/Physarum_Polycephalum-simulation/" target="_blank">Use the simulation.</a>
+<a href="https://artainmo.github.io/physarum_polycephalum-simulation/" target="_blank">Use the simulation.</a>
 
 Current version handles one blob with multiple food sources of different sizes and macronutrient composition. The code hasn't been optimized for speed yet, thus in certain situations where the active branches are in large amounts it can run slowly for some time until unnecessary branches retract.
 
