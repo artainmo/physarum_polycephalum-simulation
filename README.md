@@ -3,14 +3,14 @@
 Visual simulation of an intelligent slime-mold named Physarum Polycephalum, a biological form of intelligence without a nervous system.<br>
 Has implications for intrinsic motivation of intelligent systems and path traversal.
 
-The intrinsic motivation of this intelligent system can be summarized as consisting of two phases, namely exploration and exploitation. First it will explore by advancing in a generalized manner until it senses an attractant which leads to the exploitation phase where it advances in a selective manner towards the attractant until consumed. We could also talk about a third phase, the avoidant phase, where a repellant modulates the blob's behavior so that the blob avoids it.
+The intrinsic motivation of this intelligent system can be summarized as consisting of two phases, namely exploration and exploitation. First it will explore by advancing in a generalized manner until it senses an attractant which leads to the exploitation phase where it advances in a selective manner towards the attractant until consumed. We could also talk about a third phase, the avoidant phase, where a repellant modulates the Physarum's behavior so that the Physarum avoids it.
 
 ## See
 <a href="https://artainmo.github.io/physarum_polycephalum-simulation/" target="_blank">Use the simulation.</a>
 
-Current version handles one blob with multiple food sources of different sizes and macronutrient composition. The code hasn't been optimized for speed yet, thus in certain situations where the active branches are in large amounts it can run slowly for some time until unnecessary branches retract.
+Current version handles one Physarum with multiple food sources of different sizes and macronutrient composition. The code hasn't been optimized for speed yet, thus in certain situations where the active branches are in large amounts it can run slowly for some time until unnecessary branches retract.
 
-I could still add light and its aversive effect, walls, multiple blobs competing for food, optimize code speed or even handle temperature/humidity and blob's internal clock...
+I could still add light and its aversive effect, walls, food color relative to macronutrient composition, multiple Physarums competing for food, optimize code speed or even handle temperature/humidity and Physarum's internal clock...
 
 ## Workings
 Here are the main characteristics of the Physarum polycephalum who are important for programming its simulation:
