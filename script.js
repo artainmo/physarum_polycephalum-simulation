@@ -220,9 +220,6 @@ class Physarum {
 			}
 			if (this.branches[i].inFood) { inFood = true; }
 		}
-		console.log(highestSensedFood);
-		console.log(inFood);
-		console.log(Foods[0]);
 		//Give cAMP accordingly
 		for (let i in this.branches) {
 			if (highestSensedFood === 0) {
@@ -338,18 +335,23 @@ var interval;
 
 //Start the simulation
 document.getElementById('startButton').addEventListener('click', () => {
-	document.getElementById('startButton').childNodes[0].nodeValue = "Restart";
 	let slime_mold = new Physarum(canvas.width/2, canvas.height/2,
 				Math.min(canvas.width, canvas.height)/100);
+	let slime_molds = [slime_mold];
 	let food = new Food(canvas.width - (canvas.width/15),
 							canvas.height - (canvas.height/6),
 							Math.min(canvas.width, canvas.height)/15,
 							34, 25);
+	let foods = [food];
 
+	document.getElementById('startButton').childNodes[0].nodeValue = "Restart";
 	clearInterval(interval);
 	interval = setInterval(() => {
-		drawMap(ctx, [slime_mold], [food]);
-		slime_mold.advance([food]);
+		if (!foods.some((fo) => { return fo.radius !== 0 })) {
+			clearInterval(interval);
+		}
+		drawMap(ctx, slime_molds, foods);
+		slime_mold.advance(foods);
 		console.log(slime_mold.branches);
 	}, 300);
 });
