@@ -165,7 +165,7 @@ class Physarum {
 			this.branches.push(newBranch);
 			return newBranch;
 		}
-		return undefined;
+		return null;
 	}
 
 	_branch(from) {
@@ -174,11 +174,14 @@ class Physarum {
 		else if (from.cAMP >= 75) { iterations = 2; }
 		else if (from.cAMP >= 50) { iterations = 1; }
 		for (let i=0; i < iterations; i++) {
-			if (from.open_ended === true) { from.changeOpenEnded(); }
+			console.log(`BEF: ${this.branches.length}`);
 			let newBranch = this._degrees_branch(from, 180);
-			newBranch = newBranch | this._degrees_branch(from, 135);
-			newBranch = newBranch | this._degrees_branch(from, 225);
+			this._degrees_branch(from, 135);
+			this._degrees_branch(from, 225);
+			console.log(`AFT: ${this.branches.length}`);
+			console.log(newBranch);
 			if (!newBranch) { break; }
+			if (from.open_ended === true) { from.changeOpenEnded(); }
 			from = newBranch;
 		}
 	}
