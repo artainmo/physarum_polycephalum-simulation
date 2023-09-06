@@ -75,7 +75,7 @@ class Branch {
 			this.sensedFood = 0;
 			for (let i in Foods) {
 				this.sensedFood += Foods[i].sense(this);
-				if (!this.inFood && Foods[i].arrived(this)) {
+				if (Foods[i].arrived(this) && !this.inFood) {
 					this.inFood = true;
 				}
 			}
@@ -376,6 +376,8 @@ function run() {
 	for (let i in g_slime_molds) {
 		g_slime_molds[i].advance(g_foods);
 	}
+	console.log(g_foods[1]);
+	console.log(Math.min(canvas.width, canvas.height)/100);
 }
 
 //Handle HTML buttons
