@@ -1,3 +1,10 @@
+//Get canvas element and context
+const canvas = document.getElementById('Canvas');
+canvas.width = window.innerWidth * 0.97;
+canvas.height = window.innerHeight * 0.8;
+const ctx = canvas.getContext('2d');
+var g_interval;
+
 //Classes
 class Position {
 	constructor(x, y) {
@@ -112,6 +119,9 @@ class Physarum {
 	}
 
 	_branch_intersect(newBranch) {
+		if (newBranch.position2.x < 0 || newBranch.position2.x > canvas.width
+					|| newBranch.position2.y < 0
+					|| newBranch.position2.y > canvas.height) { return true; }
 		for (branch of this.branches) {
 			if (newBranch.intersect(branch)) {
 				return true;
@@ -326,13 +336,6 @@ function drawMap(ctx, Physarums, Foods) {
 		}
 	}
 }
-
-//Get canvas element and context
-const canvas = document.getElementById('Canvas');
-canvas.width = window.innerWidth * 0.97;
-canvas.height = window.innerHeight * 0.8;
-const ctx = canvas.getContext('2d');
-var g_interval;
 
 //Start simulation
 var g_slime_molds;
