@@ -85,14 +85,14 @@ class Branch {
 	intersect(branch2) {
 		if (branch2.position1.isEqual(this.position1) &&
 				branch2.position2.isEqual(this.position2)) {
-			return true;
+			if (branch2.inFood) { return false; } else { return true; }
 		} else if (branch2.position1.isEqual(this.position1)) {
 			return false;
 		} else if (branch2.position2.isEqual(this.position1)) {
 			return false;
 		} else if (this.position2.distance(branch2.position1) < this.length
 				|| this.position2.distance(branch2.position2) < this.length) {
-			return true;
+			if (branch2.inFood) { return false; } else { return true; }
 		} else {
 			return false;
 		}
@@ -138,7 +138,8 @@ class Physarum {
 		else if (branch.cAMP < 25) { iterations = 1; }
 		for (let l=0; l < iterations; l++) {
 			if (branch.type === "translucent slime"
-						|| branch.open_ended === false) { break; }
+					|| branch.open_ended === false
+					|| branch.inFood) { break; }
 			if (index < 4) { break; }
 			branch.changeType();
 			//Find prior branch for next round and to potentially set as open-ended
@@ -174,12 +175,9 @@ class Physarum {
 		else if (from.cAMP >= 75) { iterations = 2; }
 		else if (from.cAMP >= 50) { iterations = 1; }
 		for (let i=0; i < iterations; i++) {
-			console.log(`BEF: ${this.branches.length}`);
 			let newBranch = this._degrees_branch(from, 180);
 			this._degrees_branch(from, 135);
 			this._degrees_branch(from, 225);
-			console.log(`AFT: ${this.branches.length}`);
-			console.log(newBranch);
 			if (!newBranch) { break; }
 			if (from.open_ended === true) { from.changeOpenEnded(); }
 			from = newBranch;
@@ -257,7 +255,9 @@ class Food {
 
 	_eat(branch) {
 		this.radius -= (this.radius / 100 * 5);
-		if (this.radius <= (branch.length*2)) { this.radius = 0; }
+		if (this.radius <= branch.length*2) {
+			this.radius = 0;
+		}
 		this._get_sensingRange_and_foodValue();
 	}
 
@@ -303,6 +303,12 @@ function drawCircle(context, x, y, radius, color='#000000')
 
 function drawMap(ctx, Physarums, Foods) {
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
+	for (food of Foods) {
+		if (food.radius > 0) {
+			drawCircle(ctx, food.position.x, food.position.y, food.radius,
+				'#CCE2A3');
+		}
+	}
 	for (physarum of Physarums) {
 		drawCircle(ctx, physarum.startPos.x, physarum.startPos.y,
 					physarum.branchLength, '#F9DC5C');
@@ -317,12 +323,6 @@ function drawMap(ctx, Physarums, Foods) {
 				drawLine(ctx, branch.position1.x, branch.position1.y,
 					branch.position2.x, branch.position2.y, '#DF928E');
 			}
-		}
-	}
-	for (food of Foods) {
-		if (food.radius > 0) {
-			drawCircle(ctx, food.position.x, food.position.y, food.radius,
-				'#DF928E');
 		}
 	}
 }
@@ -354,7 +354,8 @@ document.getElementById('startButton').addEventListener('click', () => {
 		}
 		drawMap(ctx, slime_molds, foods);
 		slime_mold.advance(foods);
-	}, 1000);
+		console.log(foods[0]);
+	}, 300);
 });
 
 //Pause the simulation
