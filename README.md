@@ -6,6 +6,10 @@ Has implications for intrinsic motivation of intelligent systems and path traver
 ## See
 <a href="https://artainmo.github.io/Physarum_Polycephalum-simulation/" target="_blank">Use the simulation.</a>
 
+Current version handles one blob with multiple food sources of different sizes and macronutrient composition. The code hasn't been optimized for speed yet, thus in certain situations where the active branches are in large amounts it can run slowly for some time until unnecessary branches retract.
+
+I could still add light and its aversive effect, walls, multiple blobs competeting for food, optimize code speed or even handle temperature/humidity and blob's internal clock...
+
 ## Workings
 Here are the main characteristics of the Physarum polycephalum who are important for programming its simulation:
 * It starts of at one point, branches like a coral until it senses from a distance food and starts to develop one branch towards that food. In the meanwhile the branches that went on wrong path retract and leave translucent slime, which signals the blob to not expand in that 'wrong' path again. When finding path to food, it finds the shortest path. Longer paths retract while the shortest one gains volume.
